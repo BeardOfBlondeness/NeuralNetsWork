@@ -137,6 +137,9 @@ public class DataSet {
 			allItems.add(new DataItem(numIns, allSplit[ct]));	// add each line
 		numItems = allItems.size();								// (note how many items)
 	}
+	
+	// 		DataSet AllXor = new DataSet("2 3 %.0f %.0f %.2f;x1 x2 AND OR XOR;0 0 0 0 0;0 1 0 1 1;1 0 0 1 1;1 1 1 1 0");
+	
 	/**
 	 * set up names of inputs and outputs
 	 * @param names		string with the names

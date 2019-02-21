@@ -62,8 +62,9 @@ public class LinearLayerNetwork {
 		double output;
 		for (int neuronct = 0; neuronct<numNeurons; neuronct++) {
 			output = weights.get(wtIndex++);						// start with bias weight( * 1)
-			for (int inputct=0; inputct<numInputs; inputct++) 		// for remaining weights
+			for (int inputct=0; inputct<numInputs; inputct++) 	{	// for remaining weights
 				 output += nInputs.get(inputct) * weights.get(wtIndex++);
+			}
 											// add weight*appropriate input and move to next weight
 			outputs.set(neuronct, output);			// set calculated output as the neuron output
 		}				
@@ -172,12 +173,13 @@ public class LinearLayerNetwork {
 	 * @return	arraylist of errors
 	 */
 	public ArrayList<Double> weightedDeltas() {
-		ArrayList<Double> wtDeltas = new ArrayList<Double>();	// create array for answer
+		ArrayList<Double> wtDeltas = new ArrayList<Double>();	
+		double ans;
 		for(int i = 0; i < numInputs; i++) {
-			double ans = 0;
-			for(int n = 0; n < numNeurons-1; n++) {
-				ans+= deltas.get(n) * weights.get(weightIndex(n, i));
-			} //Loops through each input (neuron of previous layer) and multiplies them by the weights
+			ans = 0;
+			for(int n = 0; n < numNeurons; n++) {
+				ans += deltas.get(n) * weights.get(weightIndex(n, i+1));
+			} 
 			wtDeltas.add(ans);
 		}
 		return wtDeltas;

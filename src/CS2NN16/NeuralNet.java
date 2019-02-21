@@ -1,6 +1,7 @@
 package CS2NN16;
 
 
+
 import java.util.Optional;
 import java.util.Random;
 
@@ -265,9 +266,9 @@ public class NeuralNet extends Application {
 	private void setupMLPThree (boolean isUser) {
 			// set up data sets
 		String preStr =  (isUser)? "user" : "";
-		trainData = new ScaledDataSet(DataSet.GetFile(preStr+"train.txt"));
-		unseenData = new ScaledDataSet(DataSet.GetFile(preStr+"unseen.txt"));
-		validData = new ScaledDataSet(DataSet.GetFile(preStr+"valid.txt"));
+		trainData = new ScaledDataSet(DataSet.GetFile(preStr+"happinesstrain.txt"));
+		unseenData = new ScaledDataSet(DataSet.GetFile(preStr+"happinessunseen.txt"));
+		validData = new ScaledDataSet(DataSet.GetFile(preStr+"happinessvalid.txt"));
  			
  		weightsString = "";
         setHidden();		// create MLP

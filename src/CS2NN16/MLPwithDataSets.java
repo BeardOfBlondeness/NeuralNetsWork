@@ -16,7 +16,9 @@ public class MLPwithDataSets extends MultiLayerNetwork {
 	
 	protected DataSet unseenData;			// unseen data set
 	protected DataSet validationData;		// validation set : is set to null if that set is not being used
-	
+
+	private double lastSumSSE; //The most recent stored sum of the SSE
+	private double sumSSE; //The current sum of the SSE
 	/**
 	 * Constructor for the MLP
 	 * @param numIns			number of inputs	of hidden layer
@@ -39,8 +41,10 @@ public class MLPwithDataSets extends MultiLayerNetwork {
 	 */
 	public void doInitialise() {
 		super.doInitialise();
-		// you may need extra initialisation here, both of the other data and any other variables
+		sumSSE = 0; //Initialise the current sum of SSE to 0
+		lastSumSSE = validationData.getTotalSSE(); //Set the default stored sum of SSE
 	}
+	
 	/**
 	 * present the data to the set and return a String describing results
 	 * Here it returns the performance when the training, unseen (and if available) validation
@@ -70,14 +74,27 @@ public class MLPwithDataSets extends MultiLayerNetwork {
 	 */
 	public String doLearn (int numEpochs, double lRate, double momentum) {
 		String s = "";
+		int epochsSoFar = trainData.sizeSSELog();	
 		if (validationData==null) s = super.doLearn(numEpochs, lRate, momentum);
 					// if no validation set, just use normal doLearn
 		else {
-			s = super.doLearn(numEpochs, lRate, momentum); 
-			// delete the above and write and comment code to use validation
-			
+			for (int ct=1; ct<=numEpochs; ct++) {			// for n epochs
+				learnDataSet(trainData, lRate, momentum);	// present data and adapt weights
+				doPresent(); //Present data
+				if (numEpochs<20 || ct % (numEpochs/10) == 0) // print appropriate number of times
+					//s = s + addEpochString(ct+epochsSoFar) + " : " + trainData.dataAnalysis()+"\n";
+				if (ct%10==0) { //Every 10th loop
+					sumSSE += validationData.getTotalSSE(); //set sumSSE to the current sum
+					if(sumSSE > lastSumSSE && ct > 10) {
+						s = s + "Broke on epoch: " + (ct+epochsSoFar); //Add to the output which epoch we broke on
+						break;
+					}
+					lastSumSSE = sumSSE; //update the last sum of SSE
+					sumSSE = 0; //reset the sum of SSE
+				}
+			}				
 		}
-		return s;											// return string showing learning
+		return s; // return string showing learning
 	}
 
 }

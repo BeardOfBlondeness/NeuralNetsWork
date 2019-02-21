@@ -3,6 +3,9 @@
  */
 package CS2NN16;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -132,10 +135,9 @@ public class MultiLayerNetwork extends SigmoidLayerNetwork {
 			MLN.doInitialise();
 			System.out.println(MLN.doPresent());
 			System.out.println("Weights " + MLN.getWeights());
-			System.out.println(MLN.doLearn(2000,  0.5,  0.8));
+			System.out.println(MLN.doLearn(2000,  0.4,  0.7));
 			System.out.println(MLN.doPresent());
 			System.out.println("Weights " + MLN.getWeights());
-		
 	}
 	/**
 	 * function to test MLP on other non linear separable problem using three layers
@@ -144,7 +146,7 @@ public class MultiLayerNetwork extends SigmoidLayerNetwork {
 		DataSet Other = new DataSet(DataSet.GetFile("other.txt"));
 		MultiLayerNetwork MLN = new MultiLayerNetwork(2, 4, Other,
 										new MultiLayerNetwork (4, 3, Other,
-												new SigmoidLayerNetwork(3, 2, Other)) );
+												new SigmoidLayerNetwork(3, 2, Other)));
 			MLN.presentDataSet(Other);
 			MLN.doInitialise();
 			System.out.println(MLN.doPresent());
@@ -154,13 +156,31 @@ public class MultiLayerNetwork extends SigmoidLayerNetwork {
 			System.out.println("Weights " + MLN.getWeights());
 		
 	}
+	
+	public static void TestFacebook() {
+		DataSet Facebook = new DataSet(DataSet.GetFile("masses.txt"));
+		MultiLayerNetwork MLN =  new MultiLayerNetwork(5, 5, Facebook, new SigmoidLayerNetwork(5, 1, Facebook));
+		MLN.presentDataSet(Facebook);
+		MLN.doInitialise();
+		System.out.println(MLN.doPresent());
+		System.out.println("Weights " + MLN.getWeights());
+		System.out.println(MLN.doLearn(10000,  0.1,  0.1));
+		System.out.println(MLN.doPresent());
+		System.out.println("Weights " + MLN.getWeights());
+	}
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 	//	TestXOR();				// test MLP on the XOR problem
-		TestOther();			// test MLP on the other problem
+	//	TestOther();			// test MLP on the other problem
 	//	TestThree();			// test that have 3 hidden layers
+		try {
+			System.setOut(new PrintStream(new File("Results-out.txt")));
+		} catch (FileNotFoundException e) {
+		}
+		TestFacebook();
 	}
 
 }
